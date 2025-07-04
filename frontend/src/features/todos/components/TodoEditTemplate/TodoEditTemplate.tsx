@@ -3,10 +3,7 @@ import { FC } from "react";
 import { Controller } from "react-hook-form";
 
 import { useTodoEditTemplate } from "./useTodoEditTemplate";
-
-import { BaseLayout } from "@/shared/components/layout";
 import { InputFormSection, TextAreaSection,CommonButton } from "@/shared/components/ui";
-
 import { TodoType } from "@/features/todos/types";
 import styles from "./style.module.css";
 
@@ -20,7 +17,7 @@ export const TodoEditTemplate: FC<TodoEditTemplateProps> = ({ todo }) => {
   });
 
   return (
-    <BaseLayout title={"TodoEdit"}>
+    <>
       {!!todo && (
         <form className={styles.container} onSubmit={handleEditSubmit}>
           <div className={styles.area}>
@@ -54,6 +51,6 @@ export const TodoEditTemplate: FC<TodoEditTemplateProps> = ({ todo }) => {
           </div>
         </form>
       )}
-    </BaseLayout>
+    </>
   );
 };
