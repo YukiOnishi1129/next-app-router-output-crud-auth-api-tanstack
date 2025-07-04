@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useLogin } from "@/features/auth/hooks/useAuth";
+import { useLoginMutation } from "@/features/auth/hooks/useLoginMutation";
 import { NAVIGATION_LIST } from "@/shared/constants/navigation";
 
 const schema = z.object({
@@ -15,7 +15,7 @@ const schema = z.object({
 
 export const useLoginTemplate = () => {
   const router = useRouter();
-  const loginMutation = useLogin();
+  const loginMutation = useLoginMutation();
   
   const {
     control,
