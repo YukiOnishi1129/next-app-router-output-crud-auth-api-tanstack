@@ -3,7 +3,7 @@
 import { FC } from "react";
 import { BaseLayout } from "@/shared/components/layout";
 import { InputForm, TextArea } from "@/shared/components/ui";
-import { useTodo } from "@/features/todos/hooks/useTodos";
+import { useTodoQuery } from "@/features/todos/hooks";
 import styles from "./style.module.css";
 
 type TodoDetailTemplateProps = {
@@ -11,7 +11,7 @@ type TodoDetailTemplateProps = {
 };
 
 export const TodoDetailTemplate: FC<TodoDetailTemplateProps> = ({ id }) => {
-  const { data: todoData, isLoading, error } = useTodo(id);
+  const { data: todoData, isLoading, error } = useTodoQuery(id);
 
   if (isLoading) return <BaseLayout title={"TodoDetail"}><div>Loading...</div></BaseLayout>;
   if (error) return <BaseLayout title={"TodoDetail"}><div>Error: {error.message}</div></BaseLayout>;

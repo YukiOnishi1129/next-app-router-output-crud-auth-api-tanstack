@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { InputFormSection } from "@/shared/components/ui";
 import { BaseLayout } from "@/shared/components/layout";
 import { TodoList } from "@/features/todos/components/TodoList";
-import { useTodos, useDeleteTodo } from "@/features/todos/hooks/useTodos";
+import { useTodoListQuery, useDeleteTodoMutation } from "@/features/todos/hooks";
 import styles from "./style.module.css";
 
 const schema = z.object({
@@ -16,8 +16,9 @@ const schema = z.object({
 });
 
 export const TodoListTemplate: FC = () => {
-  const { data: todosData, isLoading, error } = useTodos();
-  const deleteOtoMutation = useDeleteTodo();
+  // サーバーコンポーネントと同じqueryKeyでアクセス → キャッシュからデータを取得（API通信なし）
+  const { data: todosData, isLoading, error } = useTodoListQuery();
+  const deleteOtoMutation = useDeleteTodoMutation();
   const { control, watch } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { keyword: "" },

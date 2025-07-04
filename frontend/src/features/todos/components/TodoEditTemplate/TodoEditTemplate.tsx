@@ -21,7 +21,6 @@ export const TodoEditTemplate: FC<TodoEditTemplateProps> = ({ todo }) => {
 
   return (
     <BaseLayout title={"TodoEdit"}>
-      <div></div>
       {!!todo && (
         <form className={styles.container} onSubmit={handleEditSubmit}>
           <div className={styles.area}>
