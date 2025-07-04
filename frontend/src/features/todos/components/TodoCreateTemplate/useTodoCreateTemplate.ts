@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createTodo } from "@/features/todos/apis/todoApi";
+import { useCreateTodoMutation } from "@/features/todos/hooks";
 import { NAVIGATION_PATH } from "@/shared/constants/navigation";
 
 const schema = z.object({
@@ -16,6 +16,7 @@ const schema = z.object({
 
 export const useTodoCreateTemplate = () => {
   const navigate = useRouter();
+  const createTodoMutation = useCreateTodoMutation();
 
   const {
     control,
@@ -29,17 +30,17 @@ export const useTodoCreateTemplate = () => {
   const handleAddSubmit = handleSubmit(
     useCallback(
       async (values: z.infer<typeof schema>) => {
-        const res = await createTodo({
-          title: values.title,
-          content: values.content,
-        });
-        if (!res?.data) {
-          alert(`${res.status} ${res.errorCode}: ${res.errorMessage}`);
-          return;
+        try {
+          await createTodoMutation.mutateAsync({
+            title: values.title,
+            content: values.content,
+          });
+          navigate.push(NAVIGATION_PATH.TOP);
+        } catch (error) {
+          alert(`Failed to create todo: ${error}`);
         }
-        navigate.push(NAVIGATION_PATH.TOP);
       },
-      [navigate]
+      [navigate, createTodoMutation]
     )
   );
 
@@ -47,5 +48,6 @@ export const useTodoCreateTemplate = () => {
     control,
     errors,
     handleAddSubmit,
+    isCreating: createTodoMutation.isPending,
   };
 };

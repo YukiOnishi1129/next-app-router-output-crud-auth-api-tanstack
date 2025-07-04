@@ -1,2 +1,2 @@
-export * from "./LoginTemplate"
-export * from "./SignUpTemplate"
+export * from "./LoginTemplate";
+export * from "./SignUpTemplate";

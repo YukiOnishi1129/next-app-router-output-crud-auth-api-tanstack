@@ -4,7 +4,6 @@ import { Controller } from "react-hook-form";
 
 import { InputFormSection, CommonButton } from "@/shared/components/ui";
 
-
 import { useSignUpTemplate } from "./useSignUpTemplate";
 
 import styles from "./style.module.css";

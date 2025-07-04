@@ -1,5 +1,8 @@
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { TodoDetailTemplate } from "@/features/todos/components";
 import { getTodo } from "@/features/todos/apis/todoApi";
+import { getQueryClient } from "@/shared/lib/queryClient";
+import { QUERY_KEYS } from "@/features/todos/constants/queryKeys";
 
 type TodoDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -7,15 +10,16 @@ type TodoDetailPageProps = {
 
 export default async function TodoDetailPage({ params }: TodoDetailPageProps) {
   const { id } = await params;
-  const res = await getTodo({
-    id,
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: QUERY_KEYS.todo(id),
+    queryFn: () => getTodo({ id }),
   });
-  if (!res?.data) {
-    return (
-      <div>
-        {res.errorCode}: {res.errorMessage}
-      </div>
-    );
-  }
-  return <TodoDetailTemplate todo={res.data} />;
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <TodoDetailTemplate id={id} />
+    </HydrationBoundary>
+  );
 }

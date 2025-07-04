@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { updateTodo } from "@/features/todos/apis/todoApi";
+import { useUpdateTodoMutation } from "@/features/todos/hooks";
 import { NAVIGATION_PATH } from "@/shared/constants/navigation";
 import { TodoType } from "@/features/todos/types";
 
@@ -22,6 +22,7 @@ type UseTodoEditTemplateParams = {
 
 export const useTodoEditTemplate = ({ todo }: UseTodoEditTemplateParams) => {
   const navigate = useRouter();
+  const updateTodoMutation = useUpdateTodoMutation();
 
   const {
     control,
@@ -36,18 +37,18 @@ export const useTodoEditTemplate = ({ todo }: UseTodoEditTemplateParams) => {
     useCallback(
       async (values: z.infer<typeof schema>) => {
         if (!todo) return;
-        const res = await updateTodo({
-          id: todo.id,
-          title: values.title,
-          content: values.content,
-        });
-        if (!res?.data) {
-          alert(`${res.status} ${res.errorCode}: ${res.errorMessage}`);
-          return;
+        try {
+          await updateTodoMutation.mutateAsync({
+            id: todo.id,
+            title: values.title,
+            content: values.content,
+          });
+          navigate.push(NAVIGATION_PATH.TOP);
+        } catch (error) {
+          alert(`Failed to update todo: ${error}`);
         }
-        navigate.push(NAVIGATION_PATH.TOP);
       },
-      [navigate, todo]
+      [navigate, todo, updateTodoMutation]
     )
   );
 
@@ -55,5 +56,6 @@ export const useTodoEditTemplate = ({ todo }: UseTodoEditTemplateParams) => {
     control,
     errors,
     handleEditSubmit,
+    isUpdating: updateTodoMutation.isPending,
   };
 };
