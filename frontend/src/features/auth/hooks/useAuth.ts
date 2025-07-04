@@ -8,24 +8,12 @@ export const useLogin = () => {
   return useMutation({
     mutationKey: ['login'],
     mutationFn: (data: LoginRequest) => login(data),
-    onSuccess: (data) => {
-      console.log('Login successful', data);
-    },
-    onError: (error) => {
-      console.error('Login failed', error);
-    },
   });
 };
 
-export const useRegister = () => {
+export const useSignUp = () => {
   return useMutation({
-    mutationKey: ['register'],
+    mutationKey: ['signup'],
     mutationFn: (data: SignUpRequest) => register(data),
-    onSuccess: (data) => {
-      console.log('Registration successful', data);
-    },
-    onError: (error) => {
-      console.error('Registration failed', error);
-    },
   });
 };

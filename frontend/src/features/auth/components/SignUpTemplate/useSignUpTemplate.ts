@@ -1,12 +1,11 @@
 import { useCallback } from "react";
-
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { signUp } from "@/features/auth/actions/auth";
-
+import { useSignUp } from "@/features/auth/hooks/useAuth";
 import { NAVIGATION_LIST } from "@/shared/constants/navigation";
 
 const schema = z.object({
@@ -18,6 +17,8 @@ const schema = z.object({
 
 export const useSignUpTemplate = () => {
   const router = useRouter();
+  const signUpMutation = useSignUp();
+  
   const {
     control,
     handleSubmit,
@@ -43,18 +44,47 @@ export const useSignUpTemplate = () => {
           });
           return;
         }
+        
         const { name, email, password } = values;
-        const res = await signUp(name, email, password);
-        if (res.error?.message) {
+        
+        try {
+          const response = await signUpMutation.mutateAsync({
+            name,
+            email,
+            password,
+          });
+          
+          if (response.data) {
+            // 登録成功後、自動的にログインする
+            const result = await signIn("credentials", {
+              email,
+              password,
+              redirect: false,
+            });
+            
+            if (result?.error) {
+              setError("email", {
+                type: "manual",
+                message: "登録は成功しましたが、ログインに失敗しました",
+              });
+              return;
+            }
+            
+            router.push(NAVIGATION_LIST.TOP);
+          } else {
+            setError("email", {
+              type: "manual",
+              message: response.errorMessage || "登録に失敗しました",
+            });
+          }
+        } catch (error) {
           setError("email", {
             type: "manual",
-            message: res.error?.message,
+            message: `登録に失敗しました: ${error}`,
           });
-          return;
         }
-        router.push(NAVIGATION_LIST.TOP);
       },
-      [router, setError]
+      [router, setError, signUpMutation]
     )
   );
 
@@ -62,5 +92,6 @@ export const useSignUpTemplate = () => {
     control,
     errors,
     handleRegisterSubmit,
+    isLoading: signUpMutation.isPending,
   };
 };

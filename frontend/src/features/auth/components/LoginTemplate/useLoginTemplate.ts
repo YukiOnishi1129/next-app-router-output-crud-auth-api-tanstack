@@ -1,12 +1,11 @@
 import { useCallback } from "react";
-
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { signIn } from "@/features/auth/actions/auth";
-
+import { useLogin } from "@/features/auth/hooks/useAuth";
 import { NAVIGATION_LIST } from "@/shared/constants/navigation";
 
 const schema = z.object({
@@ -16,6 +15,8 @@ const schema = z.object({
 
 export const useLoginTemplate = () => {
   const router = useRouter();
+  const loginMutation = useLogin();
+  
   const {
     control,
     handleSubmit,
@@ -33,18 +34,44 @@ export const useLoginTemplate = () => {
     useCallback(
       async (values: z.infer<typeof schema>) => {
         const { email, password } = values;
-        const res = await signIn(email, password);
-        if (res.error?.message) {
+        
+        try {
+          const response = await loginMutation.mutateAsync({
+            email,
+            password,
+          });
+          
+          if (response.data) {
+            // NextAuth.jsで認証状態を更新
+            const result = await signIn("credentials", {
+              email,
+              password,
+              redirect: false,
+            });
+            
+            if (result?.error) {
+              setError("email", {
+                type: "manual",
+                message: result.error,
+              });
+              return;
+            }
+            
+            router.push(NAVIGATION_LIST.TOP);
+          } else {
+            setError("email", {
+              type: "manual",
+              message: response.errorMessage || "ログインに失敗しました",
+            });
+          }
+        } catch (error) {
           setError("email", {
             type: "manual",
-            message: res.error?.message,
+            message: `ログインに失敗しました: ${error}`,
           });
-          return;
         }
-        router.push(NAVIGATION_LIST.TOP);
       },
-
-      [setError, router]
+      [setError, router, loginMutation]
     )
   );
 
@@ -52,5 +79,6 @@ export const useLoginTemplate = () => {
     control,
     errors,
     handleLoginSubmit,
+    isLoading: loginMutation.isPending,
   };
 };
