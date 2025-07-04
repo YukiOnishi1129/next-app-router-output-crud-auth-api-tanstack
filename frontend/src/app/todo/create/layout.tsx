@@ -6,9 +6,5 @@ interface TodoCreateLayoutProps {
 }
 
 export default function TodoCreateLayout({ children }: TodoCreateLayoutProps) {
-  return (
-    <BaseLayout title="Create Todo">
-      {children}
-    </BaseLayout>
-  );
+  return <BaseLayout title="Create Todo">{children}</BaseLayout>;
 }

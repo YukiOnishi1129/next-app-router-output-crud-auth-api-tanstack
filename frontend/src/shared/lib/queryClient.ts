@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient } from "@tanstack/react-query";
 
 export function makeQueryClient() {
   return new QueryClient({
@@ -6,7 +6,7 @@ export function makeQueryClient() {
       queries: {
         staleTime: 60 * 1000,
         retry: (failureCount, error) => {
-          if (error && typeof error === 'object' && 'status' in error) {
+          if (error && typeof error === "object" && "status" in error) {
             if (error.status === 401 || error.status === 403) {
               return false;
             }
@@ -21,7 +21,7 @@ export function makeQueryClient() {
 let browserQueryClient: QueryClient | undefined = undefined;
 
 export function getQueryClient() {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return makeQueryClient();
   } else {
     if (!browserQueryClient) browserQueryClient = makeQueryClient();

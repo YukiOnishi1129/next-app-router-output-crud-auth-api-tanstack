@@ -7,7 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { InputFormSection } from "@/shared/components/ui";
 import { TodoList } from "@/features/todos/components/TodoList";
-import { useTodoListQuery, useDeleteTodoMutation } from "@/features/todos/hooks";
+import {
+  useTodoListQuery,
+  useDeleteTodoMutation,
+} from "@/features/todos/hooks";
 import styles from "./style.module.css";
 
 const schema = z.object({
@@ -32,15 +35,18 @@ export const TodoListTemplate: FC = () => {
     });
   }, [todosData?.data?.todos, searchKeyword]);
 
-  const handleDeleteTodo = useCallback(async (id: string, title: string) => {
-    if (window.confirm(`Do you want to delete "${title}"?`)) {
-      try {
-        await deleteOtoMutation.mutateAsync(id);
-      } catch (error) {
-        alert(`Failed to delete todo: ${error}`);
+  const handleDeleteTodo = useCallback(
+    async (id: string, title: string) => {
+      if (window.confirm(`Do you want to delete "${title}"?`)) {
+        try {
+          await deleteOtoMutation.mutateAsync(id);
+        } catch (error) {
+          alert(`Failed to delete todo: ${error}`);
+        }
       }
-    }
-  }, [deleteOtoMutation]);
+    },
+    [deleteOtoMutation]
+  );
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;

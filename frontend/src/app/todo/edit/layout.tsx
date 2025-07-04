@@ -6,9 +6,5 @@ interface TodoEditLayoutProps {
 }
 
 export default function TodoEditLayout({ children }: TodoEditLayoutProps) {
-  return (
-    <BaseLayout title="Edit Todo">
-      {children}
-    </BaseLayout>
-  );
+  return <BaseLayout title="Edit Todo">{children}</BaseLayout>;
 }

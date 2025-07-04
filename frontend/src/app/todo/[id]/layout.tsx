@@ -6,9 +6,5 @@ interface TodoDetailLayoutProps {
 }
 
 export default function TodoDetailLayout({ children }: TodoDetailLayoutProps) {
-  return (
-    <BaseLayout title="Todo Detail">
-      {children}
-    </BaseLayout>
-  );
+  return <BaseLayout title="Todo Detail">{children}</BaseLayout>;
 }

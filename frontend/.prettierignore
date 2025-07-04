@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Production builds
+.next/
+out/
+dist/
+
+# Environment variables
+.env*
+
+# Logs
+*.log
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Others
+.DS_Store
+*.tsbuildinfo

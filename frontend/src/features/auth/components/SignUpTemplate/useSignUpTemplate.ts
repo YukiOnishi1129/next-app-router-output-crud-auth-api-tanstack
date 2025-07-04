@@ -18,7 +18,7 @@ const schema = z.object({
 export const useSignUpTemplate = () => {
   const router = useRouter();
   const signUpMutation = useSignUpMutation();
-  
+
   const {
     control,
     handleSubmit,
@@ -44,16 +44,16 @@ export const useSignUpTemplate = () => {
           });
           return;
         }
-        
+
         const { name, email, password } = values;
-        
+
         try {
           const response = await signUpMutation.mutateAsync({
             name,
             email,
             password,
           });
-          
+
           if (response.data) {
             // 登録成功後、自動的にログインする
             const result = await signIn("credentials", {
@@ -61,7 +61,7 @@ export const useSignUpTemplate = () => {
               password,
               redirect: false,
             });
-            
+
             if (result?.error) {
               setError("email", {
                 type: "manual",
@@ -69,7 +69,7 @@ export const useSignUpTemplate = () => {
               });
               return;
             }
-            
+
             router.push(NAVIGATION_LIST.TOP);
           } else {
             setError("email", {

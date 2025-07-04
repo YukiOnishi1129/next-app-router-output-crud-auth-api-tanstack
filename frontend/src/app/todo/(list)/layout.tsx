@@ -6,9 +6,5 @@ interface TodoListLayoutProps {
 }
 
 export default function TodoListLayout({ children }: TodoListLayoutProps) {
-  return (
-    <BaseLayout title="TodoList">
-      {children}
-    </BaseLayout>
-  );
+  return <BaseLayout title="TodoList">{children}</BaseLayout>;
 }

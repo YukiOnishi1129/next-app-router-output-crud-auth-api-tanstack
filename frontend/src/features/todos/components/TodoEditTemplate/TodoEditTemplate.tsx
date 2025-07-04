@@ -3,7 +3,11 @@ import { FC } from "react";
 import { Controller } from "react-hook-form";
 
 import { useTodoEditTemplate } from "./useTodoEditTemplate";
-import { InputFormSection, TextAreaSection,CommonButton } from "@/shared/components/ui";
+import {
+  InputFormSection,
+  TextAreaSection,
+  CommonButton,
+} from "@/shared/components/ui";
 import { TodoType } from "@/features/todos/types";
 import styles from "./style.module.css";
 

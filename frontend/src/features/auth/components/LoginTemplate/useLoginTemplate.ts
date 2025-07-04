@@ -16,7 +16,7 @@ const schema = z.object({
 export const useLoginTemplate = () => {
   const router = useRouter();
   const loginMutation = useLoginMutation();
-  
+
   const {
     control,
     handleSubmit,
@@ -34,13 +34,13 @@ export const useLoginTemplate = () => {
     useCallback(
       async (values: z.infer<typeof schema>) => {
         const { email, password } = values;
-        
+
         try {
           const response = await loginMutation.mutateAsync({
             email,
             password,
           });
-          
+
           if (response.data) {
             // NextAuth.jsで認証状態を更新
             const result = await signIn("credentials", {
@@ -48,7 +48,7 @@ export const useLoginTemplate = () => {
               password,
               redirect: false,
             });
-            
+
             if (result?.error) {
               setError("email", {
                 type: "manual",
@@ -56,7 +56,7 @@ export const useLoginTemplate = () => {
               });
               return;
             }
-            
+
             router.push(NAVIGATION_LIST.TOP);
           } else {
             setError("email", {
